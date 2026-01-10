@@ -75,17 +75,23 @@ const ManageRevenueAllClinics: React.FC = () => {
                     ? SummaryApi.statistics.getAllClinicsRevenueByMonth(year, month)// Gọi API lấy doanh thu theo tháng
                     : SummaryApi.statistics.getAllClinicsRevenueLast7Days()// Gọi API lấy doanh thu trong 7 ngày gần nhất
             );
+            const apiData: {
+                clinicId: string;
+                clinicName?: string;
+                totalRevenue?: number;
+                appointmentCount?: number;
+            }[] = res.data?.data || [];
             // Tạo một Map để ánh xạ clinicId với doanh thu và số cuộc hẹn
             // sau đó kết hợp với danh sách phòng khám đã lấy trước đó
-            const map = new Map(
-                (res.data.data || []).map((i: any) => [
+            const map = new Map<string, ClinicRevenue>(
+                apiData.map((i) => [
                     i.clinicId,
                     {
                         clinicId: i.clinicId,
                         clinicName: i.clinicName?.trim() || "Unnamed Clinic",// Tên phòng khám, nếu không có thì đặt là "Unnamed Clinic"
                         revenue: i.totalRevenue || 0,// Doanh thu, nếu không có thì đặt là 0
                         appointmentCount: i.appointmentCount || 0,// Số cuộc hẹn, nếu không có thì đặt là 0
-                    } as ClinicRevenue,
+                    },
                 ])
             );
             // Kết hợp dữ liệu doanh thu với danh sách phòng khám

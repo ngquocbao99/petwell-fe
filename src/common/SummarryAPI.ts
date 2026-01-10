@@ -1,5 +1,11 @@
-// Allow overriding API base via env for production; fall back to local dev
-export const baseURL = "https://petwell-be.onrender.com" || "http://localhost:5000";
+// Prefer env override; auto-use localhost in dev, production URL otherwise
+const PROD_BASE = "https://petwell-be.onrender.com";
+const LOCAL_BASE = "http://localhost:5000";
+export const baseURL =
+  import.meta.env?.VITE_API_BASE_URL ||
+  (typeof window !== "undefined" && window.location.hostname === "localhost"
+    ? LOCAL_BASE
+    : PROD_BASE);
 
 const SummaryApi = {
   baseUrl: baseURL,
