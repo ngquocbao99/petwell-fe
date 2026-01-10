@@ -90,7 +90,7 @@ const ManageRevenueAllClinics: React.FC = () => {
             );
             // Kết hợp dữ liệu doanh thu với danh sách phòng khám
             // nếu phòng khám không có doanh thu thì sẽ tạo một đối tượng mới với doanh thu và số cuộc hẹn là 0
-            const merged = clinics.map(c => map.get(c.clinicId) || {
+            const merged: ClinicRevenue[] = clinics.map(c => map.get(c.clinicId) || {
                 clinicId: c.clinicId,
                 clinicName: c.clinicName,
                 revenue: 0,

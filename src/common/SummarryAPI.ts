@@ -1,4 +1,5 @@
-export const baseURL = "http://localhost:5000";
+// Allow overriding API base via env for production; fall back to local dev
+export const baseURL = "https://petwell-be.onrender.com" || "http://localhost:5000";
 
 const SummaryApi = {
   baseUrl: baseURL,
@@ -8,6 +9,10 @@ const SummaryApi = {
   },
   login: {
     url: "/api/v1/auth/login",
+    method: "post",
+  },
+  refreshToken: {
+    url: "/api/v1/auth/refresh-token",
     method: "post",
   },
   uploadImage: {

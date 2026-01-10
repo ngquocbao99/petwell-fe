@@ -22,26 +22,25 @@ Axios.interceptors.request.use(
 
 // life span accessToken
 
-Axios.interceptors.request.use(
-    (response) => {
-        return response
-    },
+Axios.interceptors.response.use(
+    (response) => response,
     async (error) => {
-        let originRequest = error.config
+        const originRequest = error?.config || {};
 
-        if (error.response.status === 401 && !originRequest.retry) {
-            originRequest.retry = true
-            const refreshToken = localStorage.getItem("refreshToken")
+        if (error?.response?.status === 401 && !originRequest.retry) {
+            originRequest.retry = true;
+            const refreshToken = localStorage.getItem("refreshToken");
             if (refreshToken) {
-                const newAccessToken = await refreshAccessToken(refreshToken)
+                const newAccessToken = await refreshAccessToken(refreshToken);
                 if (newAccessToken) {
-                    originRequest.headers.Authorization = `Bearer ${newAccessToken}`
-                    return Axios(originRequest)
+                    originRequest.headers = originRequest.headers || {};
+                    originRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                    return Axios(originRequest);
                 }
             }
         }
 
-        return Promise.reject(error)
+        return Promise.reject(error);
     }
 )
 

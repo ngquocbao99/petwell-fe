@@ -139,6 +139,16 @@ const AppointmentStatus: React.FC = () => {
 
     // nếu không có dữ liệu phòng khám thì hiển thị thông báo không có dữ liệu
     const pieData = statusData.filter((entry) => entry.count > 0);
+    const renderLegend = () => (
+        <Box display="flex" flexDirection="column" gap={1} sx={{ px: 1 }}>
+            {pieData.map((entry) => (
+                <Box key={entry.status} display="flex" alignItems="center" gap={1}>
+                    <Box sx={{ width: 12, height: 12, bgcolor: STATUS_COLORS[entry.status], borderRadius: 0.5 }} />
+                    <Typography variant="body2">{STATUS_LABELS[entry.status]}</Typography>
+                </Box>
+            ))}
+        </Box>
+    );
 
     return (
         <Box sx={{ p: 4 }}>
@@ -236,12 +246,7 @@ const AppointmentStatus: React.FC = () => {
                                 layout="vertical"
                                 verticalAlign="top"
                                 align="right"
-                                payload={pieData.map((entry) => ({
-                                    value: STATUS_LABELS[entry.status],
-                                    type: 'square',
-                                    color: STATUS_COLORS[entry.status],
-                                    id: entry.status,
-                                }))}
+                                content={() => renderLegend()}
                             />
                         </PieChart>
                     </ResponsiveContainer>
