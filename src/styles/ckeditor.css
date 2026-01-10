@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@media print {
+  body {
+    margin: 0 !important;
+  }
+}
+
+:root {
+  --ck-content-font-family: "Lato";
+}
+
+.main-container {
+  font-family: var(--ck-content-font-family);
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.editor-container_classic-editor .editor-container__editor {
+  min-width: 100%;
+  max-width: 100%;
+}
+
+.editor-container_include-block-toolbar {
+  margin-left: 42px;
+}
+
+.ck-editor__editable {
+  min-height: 300px;
+  max-height: 500px;
+}
+
+.knowledge-editor-container {
+  margin: 16px 0;
+}
+
+.knowledge-editor-container .ck-editor {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.knowledge-editor-container .ck-editor__main {
+  background-color: #fff;
+}
+
+.knowledge-editor-container .ck-editor__editable {
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
