@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Menu, MenuItem, IconButton } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,7 +8,6 @@ import LoginIcon from '@mui/icons-material/Login';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { logout } from '../store/userSlice';
 import { useDispatch } from 'react-redux';
-import Chatbot from './Chatbot';
 
 const AccountMenu = () => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -16,7 +15,6 @@ const AccountMenu = () => {
     const navigate = useNavigate()
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const dispatch = useDispatch();
-    const chatbotRef = useRef<any>(null);
 
     useEffect(() => {
         const checkLogin = () => {
@@ -47,9 +45,6 @@ const AccountMenu = () => {
         dispatch(logout());
         setIsLoggedIn(false);
         handleClose();
-        if (chatbotRef.current && typeof chatbotRef.current.clearChatHistory === 'function') {
-            chatbotRef.current.clearChatHistory();
-        }
         window.dispatchEvent(new Event("user-login"));
         navigate('/')
     };
@@ -97,7 +92,6 @@ const AccountMenu = () => {
                     ]}
 
             </Menu>
-            <Chatbot ref={chatbotRef} />
         </div>
     );
 };

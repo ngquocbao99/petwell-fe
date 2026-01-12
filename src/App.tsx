@@ -5,7 +5,6 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 
 import { Toaster } from 'react-hot-toast'
-import Chatbot from '@components/Chatbot'
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
       <main className='min-h-[78vh]' >
         <Outlet />
       </main>
-      <Chatbot />
       <Footer />
     </>
   )
