@@ -60,8 +60,8 @@ interface Clinic {
   licenseNumber?: string;
   isVerified?: boolean;
   managerId?: string;
-  doctors?: Array<{_id: string, fullName: string, email: string, role: string, avatar?: string}>;
-  staff?: Array<{_id: string, fullName: string, email: string, role: string, avatar?: string}>;
+  doctors?: Array<{ _id: string, fullName: string, email: string, role: string, avatar?: string }>;
+  staff?: Array<{ _id: string, fullName: string, email: string, role: string, avatar?: string }>;
   rating?: number;
   reviewCount?: number;
   isDeleted?: boolean;
@@ -81,7 +81,7 @@ interface ConfirmationDialog {
   isOpen: boolean;
   title: string;
   message: string;
-  confirmText: string; 
+  confirmText: string;
   cancelText: string;
   confirmBtnColor: 'error' | 'primary' | 'success' | 'warning' | 'info';
   onConfirm: () => void;
@@ -89,12 +89,12 @@ interface ConfirmationDialog {
 
 const ManageClinicPage: React.FC = () => {
   const [clinics, setClinics] = useState<Clinic[]>([]);
-  const [selectedClinic, setSelectedClinic] = useState<Clinic>({ 
-    name: '', 
-    address: '', 
-    city: '', 
-    phone: '', 
-    email: '', 
+  const [selectedClinic, setSelectedClinic] = useState<Clinic>({
+    name: '',
+    address: '',
+    city: '',
+    phone: '',
+    email: '',
     description: '',
     doctors: [],
     staff: []
@@ -116,9 +116,9 @@ const ManageClinicPage: React.FC = () => {
     confirmText: 'Confirm',
     cancelText: 'Cancel',
     confirmBtnColor: 'primary',
-    onConfirm: () => {}
+    onConfirm: () => { }
   });
-  
+
   // States for doctor/staff management
   const [availableDoctors, setAvailableDoctors] = useState<User[]>([]);
   const [availableStaff, setAvailableStaff] = useState<User[]>([]);
@@ -133,7 +133,7 @@ const ManageClinicPage: React.FC = () => {
 
   // Redux state
   const user = useSelector((state: any) => state.user);
-  
+
   if (user.role !== 'admin') {
     return (
       <Container maxWidth="sm" sx={{ py: 8 }}>
@@ -151,7 +151,7 @@ const ManageClinicPage: React.FC = () => {
   const getManagerId = () => {
     // First try from user object in Redux state
     let managerId = user && (user._id || user.id || user.userId);
-    
+
     // If not found, try localStorage
     if (!managerId && window.localStorage) {
       try {
@@ -164,7 +164,7 @@ const ManageClinicPage: React.FC = () => {
         console.error('Failed to parse user data from localStorage:', e);
       }
     }
-    
+
     // Last resort - try to get from session storage
     if (!managerId && window.sessionStorage) {
       try {
@@ -177,7 +177,7 @@ const ManageClinicPage: React.FC = () => {
         console.error('Failed to parse user data from sessionStorage:', e);
       }
     }
-    
+
     return managerId;
   };
 
@@ -225,7 +225,8 @@ const ManageClinicPage: React.FC = () => {
     if (file) {
       setSelectedImage(file);
       setImagePreview(URL.createObjectURL(file));
-    }  };
+    }
+  };
 
   // Validate form fields
   const validateForm = () => {
@@ -257,7 +258,7 @@ const ManageClinicPage: React.FC = () => {
     if (form.description && form.description.length > 300) {
       newErrors.description = 'Description cannot exceed 300 characters';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -269,11 +270,11 @@ const ManageClinicPage: React.FC = () => {
     setSuccess('');
     if (!validateForm()) return;
     // Check for duplicate clinic before creating
-    const isDuplicate = clinics.some(clinic => 
+    const isDuplicate = clinics.some(clinic =>
       !clinic.isDeleted &&
       (clinic.name.trim().toLowerCase() === form.name.trim().toLowerCase() ||
-      clinic.address.trim().toLowerCase() === form.address.trim().toLowerCase() ||
-      clinic.phone.trim() === form.phone.trim())
+        clinic.address.trim().toLowerCase() === form.address.trim().toLowerCase() ||
+        clinic.phone.trim() === form.phone.trim())
     );
     if (isDuplicate) {
       setError('A clinic with the same name, address, or phone number already exists.');
@@ -342,14 +343,14 @@ const ManageClinicPage: React.FC = () => {
         setLoading(false);
         return;
       }
-      
-      
+
+
       const res = await Axios({
         ...SummaryApi.clinic.detail,
         url: `${SummaryApi.clinic.detail.url}/${clinic._id}`
       });
-      
-      
+
+
       if (!res.data.data) {
         toast.error('Clinic not found or has been deleted.');
         setShowDetail(false);
@@ -359,7 +360,7 @@ const ManageClinicPage: React.FC = () => {
         const clinicData = res.data.data;
         if (!clinicData.doctors) clinicData.doctors = [];
         if (!clinicData.staff) clinicData.staff = [];
-        
+
         setSelectedClinic(clinicData);
         setShowDetail(true);
       }
@@ -380,7 +381,7 @@ const ManageClinicPage: React.FC = () => {
       const response = await Axios({
         ...SummaryApi.clinic.availableDoctors
       });
-      
+
       if (response.data.success) {
         setAvailableDoctors(response.data.data || []);
       } else {
@@ -401,7 +402,7 @@ const ManageClinicPage: React.FC = () => {
       const response = await Axios({
         ...SummaryApi.clinic.availableStaff
       });
-      
+
       if (response.data.success) {
         setAvailableStaff(response.data.data || []);
       } else {
@@ -421,13 +422,13 @@ const ManageClinicPage: React.FC = () => {
       toast.error('Please select a doctor');
       return;
     }
-    
+
     if (!selectedClinic?._id) {
       toast.error('No clinic selected');
       setOpenDoctorDialog(false);
       return;
     }
-    
+
     setLoadingDoctors(true);
     try {
       const response = await Axios({
@@ -436,24 +437,24 @@ const ManageClinicPage: React.FC = () => {
           doctorId: selectedDoctorId
         }
       });
-      
-      
+
+
       if (response.data.success) {
         toast.success('Doctor added to clinic successfully');
-        
+
         // Update the selectedClinic directly with the response data
         if (response.data.data) {
           // Ensure populated data has doctors and staff arrays
           const updatedClinicData = response.data.data;
           if (!updatedClinicData.doctors) updatedClinicData.doctors = [];
           if (!updatedClinicData.staff) updatedClinicData.staff = [];
-          
+
           setSelectedClinic(updatedClinicData);
         } else {
           // Fallback to refreshing clinic details if no data in response
           handleDetail(selectedClinic);
         }
-        
+
         // Close the doctor dialog
         setOpenDoctorDialog(false);
         setSelectedDoctorId('');
@@ -476,13 +477,13 @@ const ManageClinicPage: React.FC = () => {
       toast.error('Please select a staff member');
       return;
     }
-    
+
     if (!selectedClinic?._id) {
       toast.error('No clinic selected');
       setOpenStaffDialog(false);
       return;
     }
-    
+
     setLoadingStaff(true);
     try {
       const response = await Axios({
@@ -491,24 +492,24 @@ const ManageClinicPage: React.FC = () => {
           staffId: selectedStaffId
         }
       });
-      
-      
+
+
       if (response.data.success) {
         toast.success('Staff member added to clinic successfully');
-        
+
         // Update the selectedClinic directly with the response data
         if (response.data.data) {
           // Ensure populated data has doctors and staff arrays
           const updatedClinicData = response.data.data;
           if (!updatedClinicData.doctors) updatedClinicData.doctors = [];
           if (!updatedClinicData.staff) updatedClinicData.staff = [];
-          
+
           setSelectedClinic(updatedClinicData);
         } else {
           // Fallback to refreshing clinic details if no data in response
           handleDetail(selectedClinic);
         }
-        
+
         // Close the staff dialog
         setOpenStaffDialog(false);
         setSelectedStaffId('');
@@ -528,7 +529,7 @@ const ManageClinicPage: React.FC = () => {
   // Remove doctor from clinic
   const handleRemoveDoctor = async (doctorId: string) => {
     if (!selectedClinic?._id) return;
-    
+
     openConfirmationDialog(
       'Remove Doctor',
       'Are you sure you want to remove this doctor from the clinic?',
@@ -540,7 +541,7 @@ const ManageClinicPage: React.FC = () => {
           const response = await Axios({
             ...SummaryApi.clinic.removeDoctor(selectedClinic._id, doctorId)
           });
-          
+
           if (response.data.success) {
             toast.success('Doctor removed from clinic successfully');
             // Refresh clinic details
@@ -555,7 +556,7 @@ const ManageClinicPage: React.FC = () => {
           toast.error('Error removing doctor from clinic');
         } finally {
           setLoading(false);
-          setConfirmDialog({...confirmDialog, isOpen: false});
+          setConfirmDialog({ ...confirmDialog, isOpen: false });
         }
       }
     );
@@ -564,7 +565,7 @@ const ManageClinicPage: React.FC = () => {
   // Remove staff from clinic
   const handleRemoveStaff = async (staffId: string) => {
     if (!selectedClinic?._id) return;
-    
+
     openConfirmationDialog(
       'Remove Staff',
       'Are you sure you want to remove this staff member from the clinic?',
@@ -576,7 +577,7 @@ const ManageClinicPage: React.FC = () => {
           const response = await Axios({
             ...SummaryApi.clinic.removeStaff(selectedClinic._id, staffId)
           });
-          
+
           if (response.data.success) {
             toast.success('Staff member removed from clinic successfully');
             // Refresh clinic details
@@ -591,7 +592,7 @@ const ManageClinicPage: React.FC = () => {
           toast.error('Error removing staff from clinic');
         } finally {
           setLoading(false);
-          setConfirmDialog({...confirmDialog, isOpen: false});
+          setConfirmDialog({ ...confirmDialog, isOpen: false });
         }
       }
     );
@@ -603,15 +604,9 @@ const ManageClinicPage: React.FC = () => {
       toast.error('Cannot edit a banned clinic. Please unban it first.');
       return;
     }
-    
+
     // Find a valid managerId from either the clinic or the user
     const managerId = clinic.managerId || getManagerId();
-    
-      clinicManagerId: clinic.managerId, 
-      helperFunction: getManagerId(),
-      user 
-    });
-    
     // Fetch detailed clinic info including doctors and staff
     setLoading(true);
     try {
@@ -619,31 +614,31 @@ const ManageClinicPage: React.FC = () => {
         ...SummaryApi.clinic.detail,
         url: `${SummaryApi.clinic.detail.url}/${clinic._id}`
       });
-      
-      
+
+
       if (!res.data.data) {
         toast.error('Clinic not found or has been deleted.');
         return;
       }
-      
+
       const detailedClinic = res.data.data;
       setSelectedClinic(detailedClinic);
-      setForm({ 
-        ...detailedClinic, 
+      setForm({
+        ...detailedClinic,
         managerId
       });
       setIsEditing(true);
       setOpenForm(true);
-      
+
       // Fetch available doctors and staff for assignment
       await fetchAvailableDoctors();
       await fetchAvailableStaff();
-      
+
       // Initialize doctor and staff selections as empty (for new assignments)
       // Note: We don't pre-select existing doctors/staff as they are already assigned
       setSelectedDoctorIds([]);
       setSelectedStaffIds([]);
-      
+
     } catch (err) {
       toast.error('Unable to load clinic details for editing');
       console.error('Error fetching clinic details:', err);
@@ -657,12 +652,12 @@ const ManageClinicPage: React.FC = () => {
   const handleOpenCreate = useCallback(async () => {
     setForm({ name: '', address: '', city: '', phone: '', email: '', description: '', image: '', licenseNumber: '' });
     setIsEditing(false);
-    setSelectedClinic({ 
-      name: '', 
-      address: '', 
-      city: '', 
-      phone: '', 
-      email: '', 
+    setSelectedClinic({
+      name: '',
+      address: '',
+      city: '',
+      phone: '',
+      email: '',
       description: '',
       doctors: [],
       staff: []
@@ -672,7 +667,7 @@ const ManageClinicPage: React.FC = () => {
     setImagePreview('');
     setSelectedDoctorIds([]);
     setSelectedStaffIds([]);
-    
+
     // Fetch available doctors and staff for new clinic creation
     await fetchAvailableDoctors();
     await fetchAvailableStaff();
@@ -682,12 +677,12 @@ const ManageClinicPage: React.FC = () => {
     setOpenForm(false);
     setIsEditing(false);
     setForm({ name: '', address: '', city: '', phone: '', email: '', description: '', image: '', licenseNumber: '' });
-    setSelectedClinic({ 
-      name: '', 
-      address: '', 
-      city: '', 
-      phone: '', 
-      email: '', 
+    setSelectedClinic({
+      name: '',
+      address: '',
+      city: '',
+      phone: '',
+      email: '',
       description: '',
       doctors: [],
       staff: []
@@ -696,7 +691,7 @@ const ManageClinicPage: React.FC = () => {
     setImagePreview('');
     setErrors({});
   };
-    // This function was also defined below, so removing the duplicate
+  // This function was also defined below, so removing the duplicate
 
   // Use openConfirmationDialog instead of openConfirmDialog
   // closeConfirmDialog is defined below
@@ -712,8 +707,8 @@ const ManageClinicPage: React.FC = () => {
         setLoading(true);
         try {
           const response = await Axios(SummaryApi.clinic.ban(clinicId));
-          
-          
+
+
           if (response.data.success) {
             toast.success('Clinic banned successfully');
             fetchClinics(); // Refresh the clinic list
@@ -741,7 +736,7 @@ const ManageClinicPage: React.FC = () => {
         setLoading(true);
         try {
           const response = await Axios(SummaryApi.clinic.unban(clinicId));
-          
+
           if (response.data.success) {
             toast.success('Clinic unbanned successfully');
             fetchClinics(); // Refresh the clinic list
@@ -769,7 +764,7 @@ const ManageClinicPage: React.FC = () => {
         setLoading(true);
         try {
           const response = await Axios(SummaryApi.clinic.delete(clinicId));
-          
+
           if (response.data.success) {
             toast.success('Clinic deleted successfully');
             fetchClinics(); // Refresh the clinic list
@@ -785,43 +780,43 @@ const ManageClinicPage: React.FC = () => {
       }
     );
   };
-  
+
   // Function to reset form state
   const resetForm = () => {
     setForm({ name: '', address: '', city: '', phone: '', email: '', description: '', image: '', licenseNumber: '' });
     setSelectedImage(null);
     setImagePreview('');
     setErrors({});
-    setSelectedClinic({ 
-      name: '', 
-      address: '', 
-      city: '', 
-      phone: '', 
-      email: '', 
+    setSelectedClinic({
+      name: '',
+      address: '',
+      city: '',
+      phone: '',
+      email: '',
       description: '',
       doctors: [],
       staff: []
     });
     setIsEditing(false);
   };
-  
+
   // Handle updating a clinic
   const handleUpdate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     // Validate clinic selection
     if (!selectedClinic?._id) {
       toast.error('No clinic selected for update');
       return;
     }
-    
+
     // Validate managerId
     const managerId = getManagerId();
     if (!managerId) {
       toast.error('Unable to identify manager. Please try logging in again.');
       return;
     }
-    
+
     // Validate required fields
     const newErrors: { [key: string]: string } = {};
     if (!form.name) newErrors.name = 'Name is required';
@@ -829,16 +824,16 @@ const ManageClinicPage: React.FC = () => {
     if (!form.city) newErrors.city = 'City is required';
     if (!form.phone) newErrors.phone = 'Phone is required';
     if (!form.email) newErrors.email = 'Email is required';
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
     setLoading(true);
-    
+
     try {
       let imageUrl = form.image;
-      
+
       // If a new image is selected, upload it
       if (selectedImage) {
         try {
@@ -850,7 +845,7 @@ const ManageClinicPage: React.FC = () => {
           return;
         }
       }
-      
+
       // Update the form with the image URL
       const updatedForm = {
         ...form,
@@ -861,19 +856,19 @@ const ManageClinicPage: React.FC = () => {
         ...SummaryApi.clinic.update(selectedClinic._id),
         data: updatedForm
       });
-      
-      
+
+
       if (response.data.success) {
         // Store counts before clearing arrays
         const doctorCount = selectedDoctorIds.length;
         const staffCount = selectedStaffIds.length;
-        
+
         // Update doctors and staff if any are selected
         if (doctorCount > 0 || staffCount > 0) {
           try {
             const doctorPromises = [];
             const staffPromises = [];
-            
+
             // Add selected doctors to clinic
             for (const doctorId of selectedDoctorIds) {
               doctorPromises.push(
@@ -896,18 +891,18 @@ const ManageClinicPage: React.FC = () => {
 
             // Wait for all assignments to complete
             const results = await Promise.allSettled([...doctorPromises, ...staffPromises]);
-            
+
             // Check for any failures
             const failed = results.filter(result => result.status === 'rejected');
             if (failed.length > 0) {
               console.error('Some assignments failed:', failed);
               toast.error(`Failed to assign ${failed.length} member(s). Please try again.`);
             }
-            
+
             // Clear selections after successful update
             setSelectedDoctorIds([]);
             setSelectedStaffIds([]);
-            
+
           } catch (error) {
             console.error('Error updating doctors/staff:', error);
             toast.error('Error assigning doctors/staff to clinic');
@@ -915,7 +910,7 @@ const ManageClinicPage: React.FC = () => {
         }
 
         toast.success('Clinic updated successfully');
-        
+
         // Show additional success message if doctors/staff were added
         if (doctorCount > 0 || staffCount > 0) {
           const addedItems = [];
@@ -923,11 +918,11 @@ const ManageClinicPage: React.FC = () => {
           if (staffCount > 0) addedItems.push(`${staffCount} staff member(s)`);
           toast.success(`Successfully added ${addedItems.join(' and ')} to clinic`);
         }
-        
+
         fetchClinics(); // Refresh the clinic list
         setOpenForm(false);
         handleCloseForm();
-        
+
         // Refresh available doctors and staff
         fetchAvailableDoctors();
         fetchAvailableStaff();
@@ -969,7 +964,7 @@ const ManageClinicPage: React.FC = () => {
     if (clinic.isblock) {
       return (
         <Typography variant="body2" color="text.secondary">
-         unban
+          unban
         </Typography>
       );
     }
@@ -989,8 +984,8 @@ const ManageClinicPage: React.FC = () => {
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
       {/* Add Toaster component */}
-      <Toaster 
-        position="top-center" 
+      <Toaster
+        position="top-center"
         reverseOrder={false}
         containerStyle={{
           top: 20,
@@ -1042,7 +1037,7 @@ const ManageClinicPage: React.FC = () => {
         </Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
 
-       
+
         </Box>
       </Box>
 
@@ -1065,9 +1060,9 @@ const ManageClinicPage: React.FC = () => {
             >
               <CardContent sx={{ flexGrow: 1, p: 0 }}>
                 {/* Clinic Image */}
-                <Box 
-                  sx={{ 
-                    height: 150, 
+                <Box
+                  sx={{
+                    height: 150,
                     backgroundImage: `url(${clinic.image || 'https://via.placeholder.com/400x150?text=No+Image'})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
@@ -1076,55 +1071,55 @@ const ManageClinicPage: React.FC = () => {
                 >
                   {/* Status Badge */}
                   {clinic.isDeleted && (
-                    <Chip 
-                      label="Deleted" 
-                      color="error" 
+                    <Chip
+                      label="Deleted"
+                      color="error"
                       size="small"
-                      sx={{ 
-                        position: 'absolute', 
-                        top: 10, 
+                      sx={{
+                        position: 'absolute',
+                        top: 10,
                         right: 10,
                         fontWeight: 'bold'
                       }}
                     />
                   )}
-                  
+
                   {clinic.isblock && (
-                    <Chip 
-                      label="Blocked" 
-                      color="warning" 
+                    <Chip
+                      label="Blocked"
+                      color="warning"
                       size="small"
-                      sx={{ 
-                        position: 'absolute', 
-                        top: 10, 
+                      sx={{
+                        position: 'absolute',
+                        top: 10,
                         right: clinic.isDeleted ? 90 : 10,
                         fontWeight: 'bold'
                       }}
                     />
                   )}
-                  
+
                   {clinic.isVerified && (
-                    <Chip 
-                      icon={<VerifiedIcon fontSize="small" />} 
-                      label="Verified" 
-                      color="primary" 
+                    <Chip
+                      icon={<VerifiedIcon fontSize="small" />}
+                      label="Verified"
+                      color="primary"
                       size="small"
-                      sx={{ 
-                        position: 'absolute', 
-                        top: 10, 
+                      sx={{
+                        position: 'absolute',
+                        top: 10,
                         right: (clinic.isDeleted || clinic.isblock) ? 90 : 10,
                         fontWeight: 'bold'
                       }}
                     />
                   )}
                 </Box>
-                
+
                 <Box sx={{ p: 2 }}>
                   {/* Clinic Name */}
                   <Typography variant="h6" component="h2" gutterBottom noWrap title={clinic.name}>
                     {clinic.name}
                   </Typography>
-                  
+
                   {/* Location */}
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <LocationIcon fontSize="small" color="action" sx={{ mr: 1 }} />
@@ -1132,7 +1127,7 @@ const ManageClinicPage: React.FC = () => {
                       {clinic.address}, {clinic.city}
                     </Typography>
                   </Box>
-                  
+
                   {/* Phone */}
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <PhoneIcon fontSize="small" color="action" sx={{ mr: 1 }} />
@@ -1140,7 +1135,7 @@ const ManageClinicPage: React.FC = () => {
                       {clinic.phone}
                     </Typography>
                   </Box>
-                  
+
                   {/* Email */}
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                     <EmailIcon fontSize="small" color="action" sx={{ mr: 1 }} />
@@ -1148,7 +1143,7 @@ const ManageClinicPage: React.FC = () => {
                       {clinic.email}
                     </Typography>
                   </Box>
-                  
+
                   {/* Rating */}
                   {clinic.rating !== undefined && (
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
@@ -1160,7 +1155,7 @@ const ManageClinicPage: React.FC = () => {
                   )}
                 </Box>
               </CardContent>
-              
+
               <Box sx={{ p: 2, pt: 0, display: 'flex', justifyContent: 'space-between', gap: 1 }}>
                 <Button
                   variant="outlined"
@@ -1170,13 +1165,13 @@ const ManageClinicPage: React.FC = () => {
                 >
                   View
                 </Button>
-                
+
                 <Box>
                   {clinic.isblock ? (
                     <Tooltip title="Unban Clinic">
-                      <IconButton 
-                        size="small" 
-                        color="warning" 
+                      <IconButton
+                        size="small"
+                        color="warning"
                         onClick={() => handleUnban(clinic._id!)}
                       >
                         <RestoreIcon />
@@ -1185,20 +1180,20 @@ const ManageClinicPage: React.FC = () => {
                   ) : (
                     <>
                       <Tooltip title="Edit Clinic">
-                        <IconButton 
-                          size="small" 
-                          color="primary" 
+                        <IconButton
+                          size="small"
+                          color="primary"
                           onClick={() => handleEdit(clinic)}
                           sx={{ mr: 0.5 }}
                         >
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
-                      
+
                       <Tooltip title="Ban Clinic">
-                        <IconButton 
-                          size="small" 
-                          color="error" 
+                        <IconButton
+                          size="small"
+                          color="error"
                           onClick={() => handleBan(clinic._id!)}
                         >
                           <BlockIcon />
@@ -1206,10 +1201,10 @@ const ManageClinicPage: React.FC = () => {
                       </Tooltip>
                     </>
                   )}
-                  
+
                   <Tooltip title="Delete Permanently">
-                    <IconButton 
-                      size="small" 
+                    <IconButton
+                      size="small"
                       color="error"
                       onClick={() => handleDelete(clinic._id!)}
                     >
@@ -1221,14 +1216,14 @@ const ManageClinicPage: React.FC = () => {
             </Card>
           </Box>
         ))}
-        
+
         {/* Add New Clinic Card */}
         <Box sx={{ width: { xs: '100%', sm: '48%', md: '31%' }, mb: 3 }}>
-          <Card 
-            sx={{ 
+          <Card
+            sx={{
               height: '100%',
-              minHeight: 150, 
-              display: 'flex', 
+              minHeight: 150,
+              display: 'flex',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
@@ -1252,12 +1247,12 @@ const ManageClinicPage: React.FC = () => {
           </Card>
         </Box>
       </Stack>
-      
+
       {/* Create/Edit Form Dialog */}
-      <Dialog 
-        open={openForm} 
-        onClose={handleCloseForm} 
-        maxWidth="md" 
+      <Dialog
+        open={openForm}
+        onClose={handleCloseForm}
+        maxWidth="md"
         fullWidth
       >
         <DialogTitle>
@@ -1272,7 +1267,7 @@ const ManageClinicPage: React.FC = () => {
                   Basic Information
                 </Typography>
               </Box>
-              
+
               {/* Name */}
               <Box sx={{ width: '100%' }}>
                 <TextField
@@ -1285,7 +1280,7 @@ const ManageClinicPage: React.FC = () => {
                   required
                 />
               </Box>
-              
+
               {/* Address and City */}
               <Box sx={{ width: '100%', display: 'flex', gap: 2 }}>
                 <Box sx={{ flex: 2 }}>
@@ -1299,7 +1294,7 @@ const ManageClinicPage: React.FC = () => {
                     required
                   />
                 </Box>
-                
+
                 {/* City */}
                 <Box sx={{ flex: 1 }}>
                   <TextField
@@ -1313,14 +1308,14 @@ const ManageClinicPage: React.FC = () => {
                   />
                 </Box>
               </Box>
-              
+
               {/* Contact Information */}
               <Box sx={{ width: '100%', mt: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
                   Contact Information
                 </Typography>
               </Box>
-              
+
               {/* Phone and Email */}
               <Box sx={{ width: '100%', display: 'flex', gap: 2 }}>
                 <Box sx={{ flex: 1 }}>
@@ -1334,7 +1329,7 @@ const ManageClinicPage: React.FC = () => {
                     required
                   />
                 </Box>
-                
+
                 {/* Email */}
                 <Box sx={{ flex: 1 }}>
                   <TextField
@@ -1349,14 +1344,14 @@ const ManageClinicPage: React.FC = () => {
                   />
                 </Box>
               </Box>
-              
+
               {/* Description */}
               <Box sx={{ width: '100%', mt: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
                   Additional Information
                 </Typography>
               </Box>
-              
+
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ width: '100%' }}>
                   <TextField
@@ -1371,7 +1366,7 @@ const ManageClinicPage: React.FC = () => {
                   />
                 </Box>
               </Box>
-              
+
               {/* License Number and Verification */}
               <Box sx={{ width: '100%', display: 'flex', gap: 2, mt: 2 }}>
                 <Box sx={{ flex: 1 }}>
@@ -1384,36 +1379,36 @@ const ManageClinicPage: React.FC = () => {
                     helperText={errors.licenseNumber}
                   />
                 </Box>
-                
+
                 {/* Verified Status */}
                 <Box sx={{ flex: 1, display: 'flex', alignItems: 'center' }}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={form.isVerified || false}
-                      onChange={(e) => setForm({ ...form, isVerified: e.target.checked })}
-                      color="primary"
-                    />
-                  }
-                  label="Verified Clinic"
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={form.isVerified || false}
+                        onChange={(e) => setForm({ ...form, isVerified: e.target.checked })}
+                        color="primary"
+                      />
+                    }
+                    label="Verified Clinic"
                   />
                 </Box>
               </Box>
-              
+
               {/* Image Upload */}
               <Box sx={{ width: '100%', mt: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
                   Clinic Image
                 </Typography>
               </Box>
-              
+
               <Box sx={{ width: '100%' }}>
                 <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2 }}>
                   {/* Preview */}
-                  <Box 
-                    sx={{ 
-                      width: { xs: '100%', md: '50%' }, 
-                      height: 200, 
+                  <Box
+                    sx={{
+                      width: { xs: '100%', md: '50%' },
+                      height: 200,
                       border: '1px solid #e0e0e0',
                       borderRadius: 1,
                       display: 'flex',
@@ -1424,10 +1419,10 @@ const ManageClinicPage: React.FC = () => {
                     }}
                   >
                     {imagePreview ? (
-                      <img 
-                        src={imagePreview} 
-                        alt="Clinic preview" 
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      <img
+                        src={imagePreview}
+                        alt="Clinic preview"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     ) : (
                       <Typography variant="body2" color="text.secondary">
@@ -1435,7 +1430,7 @@ const ManageClinicPage: React.FC = () => {
                       </Typography>
                     )}
                   </Box>
-                  
+
                   {/* Upload Button */}
                   <Box sx={{ width: { xs: '100%', md: '50%' }, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                     <Button
@@ -1452,13 +1447,13 @@ const ManageClinicPage: React.FC = () => {
                         onChange={handleImageChange}
                       />
                     </Button>
-                    
+
                     {selectedImage && (
                       <Typography variant="body2">
                         Selected: {selectedImage.name}
                       </Typography>
                     )}
-                    
+
                     {imagePreview && !selectedImage && (
                       <Button
                         variant="text"
@@ -1476,7 +1471,7 @@ const ManageClinicPage: React.FC = () => {
                   </Box>
                 </Box>
               </Box>
-              
+
               {/* Doctor and Staff Selection - Available in both Edit and Create modes */}
               {/* For create mode, we need to add doctors/staff after creating the clinic */}
               {openForm && isEditing && selectedClinic && (
@@ -1492,23 +1487,23 @@ const ManageClinicPage: React.FC = () => {
                       <Box sx={{ maxHeight: '150px', overflowY: 'auto' }}>
                         <Stack spacing={1}>
                           {selectedClinic.doctors.map((doctor) => (
-                            <Paper 
+                            <Paper
                               key={doctor._id}
                               elevation={1}
                               sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                             >
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Avatar 
-                                  src={doctor.avatar} 
+                                <Avatar
+                                  src={doctor.avatar}
                                   sx={{ width: 32, height: 32, mr: 1, bgcolor: 'primary.main' }}
                                 >
                                   {doctor.fullName.charAt(0)}
                                 </Avatar>
                                 <Typography variant="body2">{doctor.fullName} - {doctor.email}</Typography>
                               </Box>
-                              <IconButton 
-                                color="error" 
-                                size="small" 
+                              <IconButton
+                                color="error"
+                                size="small"
                                 onClick={() => handleRemoveDoctor(doctor._id)}
                                 title="Remove Doctor"
                               >
@@ -1524,7 +1519,7 @@ const ManageClinicPage: React.FC = () => {
                       </Typography>
                     )}
                   </Box>
-                  
+
                   {/* Staff Section */}
                   <Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: 2 }}>
@@ -1532,18 +1527,18 @@ const ManageClinicPage: React.FC = () => {
                         Current Staff
                       </Typography>
                     </Box>
-                    
+
                     {selectedClinic.staff && selectedClinic.staff.length > 0 ? (
                       <Box sx={{ maxHeight: '150px', overflowY: 'auto' }}>
                         <Stack spacing={1}>
                           {selectedClinic.staff.map((staff) => (
-                            <Paper 
+                            <Paper
                               key={staff._id}
                               elevation={1}
                               sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                             >
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                <Avatar 
+                                <Avatar
                                   src={staff.avatar}
                                   sx={{ width: 32, height: 32, mr: 1, bgcolor: 'secondary.main' }}
                                 >
@@ -1551,9 +1546,9 @@ const ManageClinicPage: React.FC = () => {
                                 </Avatar>
                                 <Typography variant="body2">{staff.fullName} - {staff.email}</Typography>
                               </Box>
-                              <IconButton 
-                                color="error" 
-                                size="small" 
+                              <IconButton
+                                color="error"
+                                size="small"
                                 onClick={() => handleRemoveStaff(staff._id)}
                                 title="Remove Staff"
                               >
@@ -1668,12 +1663,12 @@ const ManageClinicPage: React.FC = () => {
         open={showDetail}
         onClose={() => {
           setShowDetail(false);
-          setSelectedClinic({ 
-            name: '', 
-            address: '', 
-            city: '', 
-            phone: '', 
-            email: '', 
+          setSelectedClinic({
+            name: '',
+            address: '',
+            city: '',
+            phone: '',
+            email: '',
             description: '',
             doctors: [],
             staff: []
@@ -1701,9 +1696,9 @@ const ManageClinicPage: React.FC = () => {
               {/* Image */}
               {selectedClinic.image && (
                 <Box sx={{ mb: 3 }}>
-                  <img 
-                    src={selectedClinic.image} 
-                    alt={selectedClinic.name} 
+                  <img
+                    src={selectedClinic.image}
+                    alt={selectedClinic.name}
                     style={{ width: '100%', borderRadius: 8, maxHeight: '300px', objectFit: 'cover' }}
                   />
                 </Box>
@@ -1720,7 +1715,7 @@ const ManageClinicPage: React.FC = () => {
                     </Box>
                   </Box>
                 </div>
-                
+
                 {/* Phone */}
                 <div style={{ width: '100%', maxWidth: '50%', marginBottom: '8px' }}>
                   <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -1731,7 +1726,7 @@ const ManageClinicPage: React.FC = () => {
                     </Box>
                   </Box>
                 </div>
-                
+
                 {/* Email */}
                 <div style={{ width: '100%', maxWidth: '50%', marginBottom: '8px' }}>
                   <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
@@ -1742,7 +1737,7 @@ const ManageClinicPage: React.FC = () => {
                     </Box>
                   </Box>
                 </div>
-                
+
                 {/* License Number */}
                 {selectedClinic.licenseNumber && (
                   <div style={{ width: '100%', maxWidth: '50%', marginBottom: '8px' }}>
@@ -1755,7 +1750,7 @@ const ManageClinicPage: React.FC = () => {
                     </Box>
                   </div>
                 )}
-                
+
                 {/* Rating */}
                 {typeof selectedClinic.rating === 'number' && (
                   <div style={{ width: '100%', maxWidth: '50%', marginBottom: '8px' }}>
@@ -1771,9 +1766,9 @@ const ManageClinicPage: React.FC = () => {
                   </div>
                 )}
               </div>
-              
+
               <Divider sx={{ my: 2 }} />
-              
+
               {/* Doctor Section */}
               <Box sx={{ mt: 4, mb: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -1791,19 +1786,19 @@ const ManageClinicPage: React.FC = () => {
                     Add Doctor
                   </Button> */}
                 </Box>
-                
+
                 {selectedClinic.doctors && selectedClinic.doctors.length > 0 ? (
                   <Box sx={{ maxHeight: '200px', overflowY: 'auto' }}>
                     <Stack spacing={1}>
                       {selectedClinic.doctors.map((doctor) => (
-                        <Paper 
+                        <Paper
                           key={doctor._id}
                           elevation={1}
                           sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                         >
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar 
-                              src={doctor.avatar} 
+                            <Avatar
+                              src={doctor.avatar}
                               sx={{ width: 32, height: 32, mr: 1, bgcolor: 'primary.main' }}
                             >
                               {doctor.fullName.charAt(0)}
@@ -1813,9 +1808,9 @@ const ManageClinicPage: React.FC = () => {
                               <Typography variant="caption" color="text.secondary">{doctor.email}</Typography>
                             </Box>
                           </Box>
-                          <IconButton 
-                            color="error" 
-                            size="small" 
+                          <IconButton
+                            color="error"
+                            size="small"
                             onClick={() => handleRemoveDoctor(doctor._id)}
                           >
                             <DeleteIcon fontSize="small" />
@@ -1830,7 +1825,7 @@ const ManageClinicPage: React.FC = () => {
                   </Typography>
                 )}
               </Box>
-              
+
               {/* Staff Section */}
               <Box sx={{ mt: 4, mb: 3 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -1848,18 +1843,18 @@ const ManageClinicPage: React.FC = () => {
                     Add Staff
                   </Button> */}
                 </Box>
-                
+
                 {selectedClinic.staff && selectedClinic.staff.length > 0 ? (
                   <Box sx={{ maxHeight: '200px', overflowY: 'auto' }}>
                     <Stack spacing={1}>
                       {selectedClinic.staff.map((staff) => (
-                        <Paper 
+                        <Paper
                           key={staff._id}
                           elevation={1}
                           sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                         >
                           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <Avatar 
+                            <Avatar
                               src={staff.avatar}
                               sx={{ width: 32, height: 32, mr: 1, bgcolor: 'secondary.main' }}
                             >
@@ -1870,9 +1865,9 @@ const ManageClinicPage: React.FC = () => {
                               <Typography variant="caption" color="text.secondary">{staff.email}</Typography>
                             </Box>
                           </Box>
-                          <IconButton 
-                            color="error" 
-                            size="small" 
+                          <IconButton
+                            color="error"
+                            size="small"
                             onClick={() => handleRemoveStaff(staff._id)}
                           >
                             <DeleteIcon fontSize="small" />
@@ -1887,7 +1882,7 @@ const ManageClinicPage: React.FC = () => {
                   </Typography>
                 )}
               </Box>
-              
+
               {/* Description */}
               {selectedClinic.description && (
                 <Box sx={{ mt: 4 }}>
@@ -1899,28 +1894,28 @@ const ManageClinicPage: React.FC = () => {
               )}
             </DialogContent>
             <DialogActions>
-              <Button 
+              <Button
                 onClick={() => {
                   setShowDetail(false);
-                  setSelectedClinic({ 
-                    name: '', 
-                    address: '', 
-                    city: '', 
-                    phone: '', 
-                    email: '', 
+                  setSelectedClinic({
+                    name: '',
+                    address: '',
+                    city: '',
+                    phone: '',
+                    email: '',
                     description: '',
                     doctors: [],
                     staff: []
                   });
-                }} 
+                }}
                 color="primary"
               >
                 Close
               </Button>
               {!selectedClinic.isDeleted && (
-                <Button 
-                  onClick={() => handleEdit(selectedClinic)} 
-                  color="primary" 
+                <Button
+                  onClick={() => handleEdit(selectedClinic)}
+                  color="primary"
                   variant="contained"
                   disabled={loading}
                 >
@@ -1939,7 +1934,7 @@ const ManageClinicPage: React.FC = () => {
         maxWidth="xs"
         fullWidth
         PaperProps={{
-          sx: { 
+          sx: {
             borderRadius: 2,
             padding: 1,
             boxShadow: 24
@@ -1964,25 +1959,25 @@ const ManageClinicPage: React.FC = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ p: 2, pt: 1 }}>
-          <Button 
-            onClick={closeConfirmDialog} 
+          <Button
+            onClick={closeConfirmDialog}
             color="inherit"
             variant="outlined"
             sx={{ minWidth: 100 }}
           >
             {confirmDialog.cancelText}
           </Button>
-          <Button 
-            onClick={() => { 
-              confirmDialog.onConfirm(); 
-              closeConfirmDialog(); 
-            }} 
-            variant="contained" 
-            sx={{ 
-              minWidth: 100, 
-              fontWeight: 600, 
-              bgcolor: '#ff9800', 
-              '&:hover': { 
+          <Button
+            onClick={() => {
+              confirmDialog.onConfirm();
+              closeConfirmDialog();
+            }}
+            variant="contained"
+            sx={{
+              minWidth: 100,
+              fontWeight: 600,
+              bgcolor: '#ff9800',
+              '&:hover': {
                 bgcolor: '#f57c00'
               }
             }}
