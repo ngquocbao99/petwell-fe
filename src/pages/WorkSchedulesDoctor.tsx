@@ -501,9 +501,6 @@ const WorkSchedulesDoctor = () => {
                       <div className="bg-[#f8f0e9] px-5 py-3 flex justify-end border-t border-[#f5e9dc]">
                         <button
                           onClick={async () => {
-                              "Request swap clicked for schedule:",
-                              schedule
-                            );
                             setSelectedMySchedule(schedule);
                             setSwapReason(""); // Reset reason
                             setSelectedSwapTargetId(null); // Reset selection
@@ -512,9 +509,6 @@ const WorkSchedulesDoctor = () => {
                               // Fetch available schedules for swap
                               const response = await fetchSwappableSchedules(
                                 schedule._id
-                              );
-                                "Swappable schedules response:",
-                                response
                               );
                               setAvailableForSwap(response || []);
                               setIsSwapModalOpen(true); // Open modal after fetching data

@@ -242,10 +242,6 @@ const Profile = () => {
   const handlePasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-      oldPassword: passwordData.oldPassword ? "***" : "",
-      newPassword: passwordData.newPassword ? "***" : "",
-      confirmPassword: passwordData.confirmPassword ? "***" : "",
-    });
     setPasswordErrors({
       oldPassword: "",
       newPassword: "",
@@ -265,10 +261,6 @@ const Profile = () => {
     setPasswordLoading(true);
 
     try {
-        userId: user.userId,
-        token: user.token ? "***" : "missing",
-      });
-
       const response = await changePasswordAPI(
         user.userId,
         passwordData,
