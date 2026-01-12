@@ -15,13 +15,13 @@ const uploadImage = async (image: File): Promise<string> => {
     try {
         // Validate file type
         if (!image.type.startsWith('image/')) {
-            throw new Error('Chỉ chấp nhận file ảnh');
+            throw new Error('Only image files are accepted');
         }
 
         // Validate file size (max 5MB)
         const maxSize = 5 * 1024 * 1024; // 5MB
         if (image.size > maxSize) {
-            throw new Error('Kích thước ảnh không được vượt quá 5MB');
+            throw new Error('Image size must not exceed 5MB');
         }
 
         const formData = new FormData()
@@ -47,9 +47,9 @@ const uploadImage = async (image: File): Promise<string> => {
     } catch (error) {
         console.error('Error uploading image:', error);
         if (error instanceof Error) {
-            throw new Error(`Lỗi tải ảnh: ${error.message}`);
+            throw new Error(`Image upload error: ${error.message}`);
         }
-        throw new Error('Có lỗi xảy ra khi tải ảnh');
+        throw new Error('An error occurred while uploading the image');
     }
 }
 

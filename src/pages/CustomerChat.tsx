@@ -206,10 +206,10 @@ const CustomerChat: React.FC = () => {
     const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            // Kiểm tra định dạng file
+            // Check file format
             const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!validImageTypes.includes(file.type)) {
-                toast.error('Chỉ chấp nhận file ảnh định dạng JPG, PNG, GIF hoặc WEBP', {
+                toast.error('Only JPG, PNG, GIF or WEBP image files are accepted', {
                     duration: 3000,
                     position: 'top-right',
                     style: {
@@ -220,9 +220,9 @@ const CustomerChat: React.FC = () => {
                 });
                 return;
             }
-            // Kiểm tra kích thước file (max 5MB)
+            // Check file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                toast.error('Kích thước file không được vượt quá 5MB', {
+                toast.error('File size must not exceed 5MB', {
                     duration: 3000,
                     position: 'top-right',
                     style: {

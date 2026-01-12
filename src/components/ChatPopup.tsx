@@ -297,10 +297,10 @@ const ChatPopup = ({ isOpen, onClose, appointmentId, doctorId, clinicId, custome
     const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (file) {
-            // Kiểm tra định dạng file
+            // Check file format
             const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!validImageTypes.includes(file.type)) {
-                toast.error('Chỉ chấp nhận file ảnh định dạng JPG, PNG, GIF hoặc WEBP', {
+                toast.error('Only JPG, PNG, GIF or WEBP image files are accepted', {
                     duration: 3000,
                     position: 'top-right',
                     style: {
@@ -311,9 +311,9 @@ const ChatPopup = ({ isOpen, onClose, appointmentId, doctorId, clinicId, custome
                 });
                 return;
             }
-            // Kiểm tra kích thước file (max 5MB)
+            // Check file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                toast.error('Kích thước file không được vượt quá 5MB', {
+                toast.error('File size must not exceed 5MB', {
                     duration: 3000,
                     position: 'top-right',
                     style: {
@@ -345,7 +345,7 @@ const ChatPopup = ({ isOpen, onClose, appointmentId, doctorId, clinicId, custome
                 uploadedImageUrl = await uploadImage(selectedImage);
             } catch (error) {
                 console.error('Error uploading image:', error);
-                const errorMessage = error instanceof Error ? error.message : 'Không thể tải lên ảnh';
+                const errorMessage = error instanceof Error ? error.message : 'Unable to upload image';
                 toast.error(errorMessage, {
                     duration: 3000,
                     position: 'top-right',
@@ -466,7 +466,7 @@ const ChatPopup = ({ isOpen, onClose, appointmentId, doctorId, clinicId, custome
                     <header className="bg-blue-500 text-white p-4 flex justify-between items-center rounded-t-lg">
                         <div>
                             <h2 className="font-bold text-lg">
-                                {doctorName ? `Trò chuyện với BS. ${doctorName}` : 'Trò chuyện với bác sĩ'}
+                                {doctorName ? `Chat with Dr. ${doctorName}` : 'Chat with Doctor'}
                             </h2>
                             <div className="text-xs opacity-75">
                                 {isSocketConnected ? '🟢 Real-time' : isApiAvailable ? '🟡 Auto-refresh (1s)' : '🔴 Offline'}
@@ -481,8 +481,8 @@ const ChatPopup = ({ isOpen, onClose, appointmentId, doctorId, clinicId, custome
                         {allMessages.length === 0 ? (
                             <div className="text-center text-gray-500 mt-8">
                                 <ChatBubbleOutlineIcon className="text-4xl mb-2" />
-                                <p>Chưa có tin nhắn nào</p>
-                                <p className="text-sm">Hãy bắt đầu cuộc trò chuyện!</p>
+                                <p>No messages yet</p>
+                                <p className="text-sm">Start the conversation!</p>
                             </div>
                         ) : (
                             allMessages.map((message, index) => {
@@ -529,7 +529,7 @@ const ChatPopup = ({ isOpen, onClose, appointmentId, doctorId, clinicId, custome
                             <div className="flex justify-start mb-2">
                                 <div className="bg-gray-200 text-gray-600 rounded-lg px-3 py-2 text-sm">
                                     <div className="flex items-center gap-1">
-                                        <span>Đang gõ</span>
+                                        <span>Typing</span>
                                         <div className="flex gap-1">
                                             <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
                                             <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
