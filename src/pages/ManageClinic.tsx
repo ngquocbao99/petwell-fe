@@ -430,10 +430,6 @@ const ManageClinicPage: React.FC = () => {
     
     setLoadingDoctors(true);
     try {
-        clinicId: selectedClinic._id,
-        doctorId: selectedDoctorId
-      });
-      
       const response = await Axios({
         ...SummaryApi.clinic.addDoctor(selectedClinic._id),
         data: {
@@ -489,10 +485,6 @@ const ManageClinicPage: React.FC = () => {
     
     setLoadingStaff(true);
     try {
-        clinicId: selectedClinic._id,
-        staffId: selectedStaffId
-      });
-      
       const response = await Axios({
         ...SummaryApi.clinic.addStaff(selectedClinic._id),
         data: {
@@ -842,13 +834,6 @@ const ManageClinicPage: React.FC = () => {
       setErrors(newErrors);
       return;
     }
-    
-      clinicId: selectedClinic._id,
-      managerId,
-      selectedDoctorIds,
-      selectedStaffIds
-    });
-    
     setLoading(true);
     
     try {
@@ -872,11 +857,6 @@ const ManageClinicPage: React.FC = () => {
         image: imageUrl,
         managerId: managerId // Use the validated managerId
       };
-      
-        ...updatedForm,
-        clinicId: selectedClinic._id
-      });
-      
       const response = await Axios({
         ...SummaryApi.clinic.update(selectedClinic._id),
         data: updatedForm
