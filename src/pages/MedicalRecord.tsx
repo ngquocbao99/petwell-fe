@@ -165,7 +165,6 @@ const MedicalRecord: React.FC = () => {
     try {
       toast.loading('Generating and downloading prescription...', { id: 'download-pdf' });
       
-      console.log('Downloading PDF for appointment:', prescription.appointmentId);
       
       const response = await Axios({
         url: `/api/v1/prescriptions/${prescription.appointmentId}/download`,
@@ -176,7 +175,6 @@ const MedicalRecord: React.FC = () => {
         responseType: 'blob', // Important for file downloads
       });
 
-      console.log('PDF response received, creating download link...');
 
       // Check if the response is actually a PDF
       if (response.data.type === 'application/json') {
@@ -208,7 +206,6 @@ const MedicalRecord: React.FC = () => {
       link.remove();
       window.URL.revokeObjectURL(url);
       
-      console.log('PDF downloaded successfully');
       toast.success('Prescription downloaded successfully', { id: 'download-pdf' });
     } catch (error: any) {
       console.error('Error downloading prescription:', error);

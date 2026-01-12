@@ -41,7 +41,6 @@ const ViewAllPetsForCustomer: React.FC = () => {
       });
       if (res.data.success) {
         setPets(res.data.data);
-        console.log(res.data.data);
       } else {
         setError(res.data.message || "Failed to fetch pets");
       }

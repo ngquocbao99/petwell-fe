@@ -57,7 +57,7 @@ const refreshAccessToken = async (refreshToken: any) => {
         localStorage.setItem('accesstoken', accessToken)
         return accessToken
     } catch (error) {
-        console.log(error)
+        // Error handled silently
     }
 }
 export default Axios

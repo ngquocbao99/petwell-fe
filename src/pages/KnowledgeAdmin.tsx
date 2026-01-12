@@ -139,7 +139,6 @@ const KnowledgeAdmin: React.FC = () => {
   };
 
   const handleEditorReady = (editor: any) => {
-    console.log("Editor is ready to use!", editor);
     setEditorInstance(editor);
     // Set data to ensure proper formatting display
     if (form.content) {
@@ -253,7 +252,6 @@ const KnowledgeAdmin: React.FC = () => {
       dispatch(fetchKnowledgePosts());
     } catch (e: any) {
       setSnackbar({ open: true, message: "Delete failed!", severity: "error" });
-      console.log("error", e.response?.status);
       if (e?.response?.status === 403) {
         setSnackbar({
           open: true,

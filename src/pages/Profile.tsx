@@ -241,11 +241,7 @@ const Profile = () => {
 
   const handlePasswordSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitted with:", passwordData);
 
-    console.log("Password submit triggered");
-    console.log("Current user:", user);
-    console.log("Password data:", {
       oldPassword: passwordData.oldPassword ? "***" : "",
       newPassword: passwordData.newPassword ? "***" : "",
       confirmPassword: passwordData.confirmPassword ? "***" : "",
@@ -258,7 +254,6 @@ const Profile = () => {
     });
 
     if (!validatePasswordForm()) {
-      console.log("Validation failed");
       return;
     }
 
@@ -270,7 +265,6 @@ const Profile = () => {
     setPasswordLoading(true);
 
     try {
-      console.log("Calling changePasswordAPI with:", {
         userId: user.userId,
         token: user.token ? "***" : "missing",
       });
@@ -281,7 +275,6 @@ const Profile = () => {
         user.token
       );
 
-      console.log("Password change response:", response);
 
       if (response.success) {
         toast.success("Password changed successfully!");

@@ -39,7 +39,6 @@ const ManageDoctorRequests: React.FC = () => {
         response = await staffApprovalAPI.getProcessedRequests();
       }
 
-      console.log("API Response:", response); // Debug log
 
       // Sửa lại cấu trúc response
       if (response && response.success) {
@@ -104,7 +103,6 @@ const ManageDoctorRequests: React.FC = () => {
         );
       }
 
-      console.log("Action Response:", response); // Debug log
 
       // Sửa lại cấu trúc response
       if (response && response.success) {

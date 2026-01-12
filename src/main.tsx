@@ -13,8 +13,6 @@ import { vi } from "date-fns/locale";
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
-console.log("Google Client ID:", GOOGLE_CLIENT_ID);
-
 createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <Provider store={store}>

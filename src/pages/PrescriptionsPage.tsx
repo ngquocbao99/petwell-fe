@@ -58,7 +58,6 @@ interface PrescriptionWithPetDetails extends Prescription {
 
 // Define as a normal React component
 const PrescriptionsPage = () => {
-  console.log('🏥 PrescriptionsPage component mounting...');
   
   const user = useSelector((state: any) => state.user);
   const [prescriptions, setPrescriptions] = useState<PrescriptionWithPetDetails[]>([]);
@@ -67,27 +66,18 @@ const PrescriptionsPage = () => {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState<boolean>(false);
 
-  console.log('🔍 Component state - User:', user);
-  console.log('🔍 Component state - Loading:', loading);
-  console.log('🔍 Component state - Error:', error);
-  console.log('🔍 Component state - Prescriptions count:', prescriptions.length);
 
   // Fetch prescriptions for the logged-in customer
   useEffect(() => {
     const fetchPrescriptions = async () => {
-      console.log('=== PRESCRIPTIONS PAGE DEBUG ===');
-      console.log('User object:', user);
-      console.log('User ID:', user?._id || user?.id);
       
       if (!user?.id && !user?._id) {
-        console.log('No user found - checking localStorage...');
         
         // Try to get user from localStorage as fallback
         try {
           const storedUser = localStorage.getItem('user');
           if (storedUser) {
             const parsedUser = JSON.parse(storedUser);
-            console.log('Found user in localStorage:', parsedUser);
             // Use the stored user for API call
             if (parsedUser._id || parsedUser.id) {
               await makeApiCall(parsedUser);
@@ -113,10 +103,8 @@ const PrescriptionsPage = () => {
         
         const userId = userObj._id || userObj.id;
         const apiUrl = `${SummaryApi.baseUrl}/api/v1/prescriptions/customer/${userId}`;
-        console.log('Making API call to:', apiUrl);
         
         const token = localStorage.getItem('token');
-        console.log('Using token:', token ? 'Token found' : 'No token');
         
         const response = await Axios.get(apiUrl, {
           headers: {
@@ -124,18 +112,13 @@ const PrescriptionsPage = () => {
           }
         });
         
-        console.log('API Response:', response);
-        console.log('Response data:', response.data);
         
         if (response.data?.success && response.data?.data) {
-          console.log('Setting prescriptions:', response.data.data);
           setPrescriptions(response.data.data);
         } else if (response.data?.data) {
           // Some APIs don't have success field
-          console.log('Setting prescriptions (no success field):', response.data.data);
           setPrescriptions(response.data.data);
         } else {
-          console.log('No prescription data found');
           setPrescriptions([]);
         }
       } catch (err: any) {
@@ -151,7 +134,6 @@ const PrescriptionsPage = () => {
     if (user || localStorage.getItem('user')) {
       fetchPrescriptions();
     } else {
-      console.log('No user available anywhere');
       setError('Please log in to view prescriptions');
       setLoading(false);
     }

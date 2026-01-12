@@ -501,7 +501,6 @@ const WorkSchedulesDoctor = () => {
                       <div className="bg-[#f8f0e9] px-5 py-3 flex justify-end border-t border-[#f5e9dc]">
                         <button
                           onClick={async () => {
-                            console.log(
                               "Request swap clicked for schedule:",
                               schedule
                             );
@@ -514,7 +513,6 @@ const WorkSchedulesDoctor = () => {
                               const response = await fetchSwappableSchedules(
                                 schedule._id
                               );
-                              console.log(
                                 "Swappable schedules response:",
                                 response
                               );
@@ -1007,7 +1005,6 @@ const WorkSchedulesDoctor = () => {
                       }
                     } catch (err) {
                       toast.error("Error sending swap request.");
-                      console.log("Error sending swap request:", err);
                     }
                   }}
                   disabled={!selectedSwapTargetId || !swapReason.trim()}

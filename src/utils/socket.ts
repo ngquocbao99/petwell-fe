@@ -6,11 +6,8 @@ class SocketService {
 
     connect(userId: string, token?: string) {
         if (this.socket && this.isConnected) {
-            console.log('Socket already connected');
             return this.socket;
         }
-
-        console.log('Connecting to socket server...');
 
         // Kết nối tới backend socket server
         this.socket = io('http://localhost:5000', {
@@ -22,7 +19,6 @@ class SocketService {
         });
 
         this.socket.on('connect', () => {
-            console.log('Connected to socket server:', this.socket?.id);
             this.isConnected = true;
 
             // Join user room để nhận tin nhắn cá nhân
@@ -30,7 +26,6 @@ class SocketService {
         });
 
         this.socket.on('disconnect', () => {
-            console.log('Disconnected from socket server');
             this.isConnected = false;
         });
 
@@ -44,7 +39,6 @@ class SocketService {
 
     disconnect() {
         if (this.socket) {
-            console.log('Disconnecting socket...');
             this.socket.disconnect();
             this.socket = null;
             this.isConnected = false;
@@ -54,7 +48,6 @@ class SocketService {
     // Join conversation room để nhận tin nhắn real-time
     joinConversation(conversationId: string) {
         if (this.socket && this.isConnected) {
-            console.log('Joining conversation:', conversationId);
             this.socket.emit('join-conversation', conversationId);
         }
     }
@@ -62,7 +55,6 @@ class SocketService {
     // Leave conversation room
     leaveConversation(conversationId: string) {
         if (this.socket && this.isConnected) {
-            console.log('Leaving conversation:', conversationId);
             this.socket.emit('leave-conversation', conversationId);
         }
     }
@@ -70,7 +62,6 @@ class SocketService {
     // Gửi tin nhắn real-time
     sendMessage(conversationId: string, message: any) {
         if (this.socket && this.isConnected) {
-            console.log('Sending real-time message:', { conversationId, message });
             this.socket.emit('send-message', {
                 conversationId,
                 ...message

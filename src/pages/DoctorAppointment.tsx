@@ -36,7 +36,6 @@ const DoctorAppointment: React.FC = () => {
       let data;
       if (tab === "available") {
         data = await fetchAvailableAppointments();
-        console.log("[DoctorAppointment] Available appointments response:", data);
       } else {
         if (!doctorId) {
           setAppointments([]);
@@ -45,7 +44,6 @@ const DoctorAppointment: React.FC = () => {
           return;
         }
         data = await fetchAppointmentsForDoctor(doctorId);
-        console.log("[DoctorAppointment] My appointments response:", data);
 
         // Filter appointments based on tab
         if (data.success) {

@@ -159,7 +159,6 @@ const ManageClinicPage: React.FC = () => {
         if (userData) {
           const parsedUser = JSON.parse(userData);
           managerId = parsedUser._id || parsedUser.id || parsedUser.userId;
-          console.log('Retrieved manager ID from localStorage:', managerId);
         }
       } catch (e) {
         console.error('Failed to parse user data from localStorage:', e);
@@ -173,7 +172,6 @@ const ManageClinicPage: React.FC = () => {
         if (sessionData) {
           const parsedUser = JSON.parse(sessionData);
           managerId = parsedUser._id || parsedUser.id || parsedUser.userId;
-          console.log('Retrieved manager ID from sessionStorage:', managerId);
         }
       } catch (e) {
         console.error('Failed to parse user data from sessionStorage:', e);
@@ -345,16 +343,12 @@ const ManageClinicPage: React.FC = () => {
         return;
       }
       
-      console.log('Fetching clinic details for ID:', clinic._id);
       
       const res = await Axios({
         ...SummaryApi.clinic.detail,
         url: `${SummaryApi.clinic.detail.url}/${clinic._id}`
       });
       
-      console.log('Detail API response:', res.data);
-      console.log('Clinic doctors:', res.data.data?.doctors);
-      console.log('Clinic staff:', res.data.data?.staff);
       
       if (!res.data.data) {
         toast.error('Clinic not found or has been deleted.');
@@ -366,7 +360,6 @@ const ManageClinicPage: React.FC = () => {
         if (!clinicData.doctors) clinicData.doctors = [];
         if (!clinicData.staff) clinicData.staff = [];
         
-        console.log('Setting selected clinic with:', clinicData);
         setSelectedClinic(clinicData);
         setShowDetail(true);
       }
@@ -437,7 +430,6 @@ const ManageClinicPage: React.FC = () => {
     
     setLoadingDoctors(true);
     try {
-      console.log('Adding doctor to clinic:', {
         clinicId: selectedClinic._id,
         doctorId: selectedDoctorId
       });
@@ -449,7 +441,6 @@ const ManageClinicPage: React.FC = () => {
         }
       });
       
-      console.log('Add doctor response:', response.data);
       
       if (response.data.success) {
         toast.success('Doctor added to clinic successfully');
@@ -461,7 +452,6 @@ const ManageClinicPage: React.FC = () => {
           if (!updatedClinicData.doctors) updatedClinicData.doctors = [];
           if (!updatedClinicData.staff) updatedClinicData.staff = [];
           
-          console.log('Updated clinic data:', updatedClinicData);
           setSelectedClinic(updatedClinicData);
         } else {
           // Fallback to refreshing clinic details if no data in response
@@ -499,7 +489,6 @@ const ManageClinicPage: React.FC = () => {
     
     setLoadingStaff(true);
     try {
-      console.log('Adding staff to clinic:', {
         clinicId: selectedClinic._id,
         staffId: selectedStaffId
       });
@@ -511,7 +500,6 @@ const ManageClinicPage: React.FC = () => {
         }
       });
       
-      console.log('Add staff response:', response.data);
       
       if (response.data.success) {
         toast.success('Staff member added to clinic successfully');
@@ -523,7 +511,6 @@ const ManageClinicPage: React.FC = () => {
           if (!updatedClinicData.doctors) updatedClinicData.doctors = [];
           if (!updatedClinicData.staff) updatedClinicData.staff = [];
           
-          console.log('Updated clinic data:', updatedClinicData);
           setSelectedClinic(updatedClinicData);
         } else {
           // Fallback to refreshing clinic details if no data in response
@@ -628,7 +615,6 @@ const ManageClinicPage: React.FC = () => {
     // Find a valid managerId from either the clinic or the user
     const managerId = clinic.managerId || getManagerId();
     
-    console.log('Edit clinic - Using managerId:', managerId, 'from', { 
       clinicManagerId: clinic.managerId, 
       helperFunction: getManagerId(),
       user 
@@ -642,9 +628,6 @@ const ManageClinicPage: React.FC = () => {
         url: `${SummaryApi.clinic.detail.url}/${clinic._id}`
       });
       
-      console.log('Detail API response:', res.data);
-      console.log('Clinic doctors:', res.data.data?.doctors);
-      console.log('Clinic staff:', res.data.data?.staff);
       
       if (!res.data.data) {
         toast.error('Clinic not found or has been deleted.');
@@ -738,7 +721,6 @@ const ManageClinicPage: React.FC = () => {
         try {
           const response = await Axios(SummaryApi.clinic.ban(clinicId));
           
-          console.log('Ban clinic response:', response.data);
           
           if (response.data.success) {
             toast.success('Clinic banned successfully');
@@ -861,7 +843,6 @@ const ManageClinicPage: React.FC = () => {
       return;
     }
     
-    console.log('Starting clinic update...', {
       clinicId: selectedClinic._id,
       managerId,
       selectedDoctorIds,
@@ -876,9 +857,7 @@ const ManageClinicPage: React.FC = () => {
       // If a new image is selected, upload it
       if (selectedImage) {
         try {
-          console.log('Uploading new image...');
           imageUrl = await UploadImage(selectedImage);
-          console.log('Image uploaded successfully:', imageUrl);
         } catch (error) {
           console.error('Image upload error:', error);
           toast.error('Error uploading image');
@@ -894,7 +873,6 @@ const ManageClinicPage: React.FC = () => {
         managerId: managerId // Use the validated managerId
       };
       
-      console.log('Updating clinic with data:', {
         ...updatedForm,
         clinicId: selectedClinic._id
       });
@@ -904,7 +882,6 @@ const ManageClinicPage: React.FC = () => {
         data: updatedForm
       });
       
-      console.log('Clinic update response:', response.data);
       
       if (response.data.success) {
         // Store counts before clearing arrays
@@ -919,7 +896,6 @@ const ManageClinicPage: React.FC = () => {
             
             // Add selected doctors to clinic
             for (const doctorId of selectedDoctorIds) {
-              console.log('Adding doctor ID:', doctorId, 'to clinic:', selectedClinic._id);
               doctorPromises.push(
                 Axios({
                   ...SummaryApi.clinic.addDoctor(selectedClinic._id),
@@ -930,7 +906,6 @@ const ManageClinicPage: React.FC = () => {
 
             // Add selected staff to clinic
             for (const staffId of selectedStaffIds) {
-              console.log('Adding staff ID:', staffId, 'to clinic:', selectedClinic._id);
               staffPromises.push(
                 Axios({
                   ...SummaryApi.clinic.addStaff(selectedClinic._id),

@@ -68,22 +68,18 @@ const ClinicDetail: React.FC = () => {
     const fetchClinic = async () => {
       setLoading(true);
       try {
-        console.log(`Fetching clinic with ID: ${id}`);
         const res = await Axios({
           ...SummaryApi.clinic.detail,
           url: `${SummaryApi.clinic.detail.url}/${id}`
         });
         
-        console.log('API Response:', res.data);
         
         // Handle array or single object response
         if (res.data && res.data.data) {
           let clinicData;
           if (Array.isArray(res.data.data)) {
-            console.log('Response is array, using first item');
             clinicData = res.data.data[0] || null;
           } else {
-            console.log('Response is object');
             clinicData = res.data.data;
           }
           

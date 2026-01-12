@@ -13,11 +13,6 @@ const staffApprovalAPI = {
   getPendingRequests: async () => {
     try {
       const token = getToken();
-      console.log("Token:", token); // Debug log
-      console.log(
-        "API URL:",
-        baseURL + SummaryApi.staffApproval.getPending.url
-      ); // Debug log
 
       const response = await fetch(
         baseURL + SummaryApi.staffApproval.getPending.url,
@@ -31,8 +26,6 @@ const staffApprovalAPI = {
         }
       );
 
-      console.log("Response status:", response.status); // Debug log
-
       if (!response.ok) {
         console.error("Response not ok:", response.status, response.statusText);
         return {
@@ -43,7 +36,6 @@ const staffApprovalAPI = {
       }
 
       const result = await response.json();
-      console.log("API Result:", result); // Debug log
       return result;
     } catch (err) {
       console.error("Error fetching pending requests:", err);
@@ -59,11 +51,6 @@ const staffApprovalAPI = {
   getProcessedRequests: async () => {
     try {
       const token = getToken();
-      console.log("Token:", token); // Debug log
-      console.log(
-        "API URL:",
-        baseURL + SummaryApi.staffApproval.getProcessed.url
-      ); // Debug log
 
       const response = await fetch(
         baseURL + SummaryApi.staffApproval.getProcessed.url,
@@ -77,8 +64,6 @@ const staffApprovalAPI = {
         }
       );
 
-      console.log("Response status:", response.status); // Debug log
-
       if (!response.ok) {
         console.error("Response not ok:", response.status, response.statusText);
         return {
@@ -89,7 +74,6 @@ const staffApprovalAPI = {
       }
 
       const result = await response.json();
-      console.log("API Result:", result); // Debug log
       return result;
     } catch (err) {
       console.error("Error fetching processed requests:", err);

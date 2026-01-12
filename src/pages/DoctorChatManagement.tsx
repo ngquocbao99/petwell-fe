@@ -298,8 +298,6 @@ const DoctorChatManagement: React.FC = () => {
             image: uploadedImageUrl || undefined
         };
 
-        console.log('Sending message with data:', messageData);
-
         const tempMessage: UnifiedMessage = {
             id: tempMessageId,
             content: finalContent || ' ', // Đảm bảo content không rỗng
@@ -320,8 +318,6 @@ const DoctorChatManagement: React.FC = () => {
                     conversationId,
                     message: messageData
                 }));
-
-                console.log('Message sent result:', result);
 
                 if (postMessage.fulfilled.match(result)) {
                     // Xóa tin nhắn tạm và fetch tin nhắn mới

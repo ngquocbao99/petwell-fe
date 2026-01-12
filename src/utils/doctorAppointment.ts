@@ -48,7 +48,6 @@ export const fetchAppointmentsForDoctor = async (id: string) => {
   try {
     const token = getToken();
     const url = `${baseURL}${SummaryApi.DoctorAppointment.getById(id).url}`;
-    console.log("Fetch doctor appointments URL:", url);
     const res = await fetch(url, {
       method: SummaryApi.DoctorAppointment.getById(id).method,
       credentials: "include",

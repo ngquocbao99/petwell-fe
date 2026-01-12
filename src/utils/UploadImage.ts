@@ -27,7 +27,6 @@ const uploadImage = async (image: File): Promise<string> => {
         const formData = new FormData()
         formData.append('image', image)
 
-        console.log('Uploading image...');
         const response = await Axios.post<UploadResponse>(
             SummaryApi.uploadImage.url,
             formData,
@@ -39,10 +38,7 @@ const uploadImage = async (image: File): Promise<string> => {
             }
         );
 
-        console.log('Upload response:', response.data);
-
         if (response.data?.success && response.data?.data?.secure_url) {
-            console.log('Image URL:', response.data.data.secure_url);
             return response.data.data.secure_url;
         } else {
             console.error('Upload response error:', response.data);
